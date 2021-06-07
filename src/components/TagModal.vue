@@ -43,6 +43,22 @@
 					@click="removeTag(tag.imapLabel)">
 					{{ t('mail','Remove') }}
 				</button>
+				<Actions :force-menu="true">
+					<ActionButton v-if="renameTagLabel"
+						icon="icon-rename"
+						@click="openEditTag">
+						{{ t('mail','Edit tag') }}
+					</ActionButton>
+					<ActionInput v-if="renameTagInput"
+								 icon="icon-tag"
+								 :value="tag.displayName"
+								 @submit="updateTag" />
+					<ActionText
+						v-if="showSaving"
+						icon="icon-loading-small">
+						{{ t('mail', 'Saving new tag name …') }}
+					</ActionText>
+				</Actions>
 			</div>
 			<h2 class="tag-title">
 				{{ t('mail', 'Add tag') }}
@@ -66,9 +82,11 @@
 
 <script>
 import Modal from '@nextcloud/vue/dist/Components/Modal'
+import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionText from '@nextcloud/vue/dist/Components/ActionText'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
-import { showError } from '@nextcloud/dialogs'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import {showError, showInfo} from '@nextcloud/dialogs'
 
 function randomColor() {
 	let randomHexColor = ((1 << 24) * Math.random() | 0).toString(16)
@@ -81,8 +99,10 @@ export default {
 	name: 'TagModal',
 	components: {
 		Modal,
+		Actions,
 		ActionText,
 		ActionInput,
+		ActionButton,
 	},
 	props: {
 		envelope: {
@@ -98,6 +118,8 @@ export default {
 			tagLabel: true,
 			tagInput: false,
 			showSaving: false,
+			renameTagLabel: true,
+			renameTagInput: false,
 			color: randomColor(),
 		}
 	},
@@ -155,6 +177,32 @@ export default {
 				return `rgba(${r}, ${g}, ${b}, ${opacity})`
 			}
 		},
+		openEditTag() {
+			this.renameTagLabel = false
+			this.renameTagInput = true
+			this.showSaving = false
+
+		},
+		async updateTag(event) {
+			this.renameTagInput = false
+			this.showSaving = false
+			const newName = event.target.querySelector('input[type=text]').value
+			try {
+				await this.$store.dispatch('updateTag',{
+					tag: this.tag,
+					newName,
+				})
+				this.renameTagLabel = true
+				this.renameTagInput = false
+				this.showSaving = false
+			} catch (error) {
+				showInfo(t('mail', 'An error occurred, unable to rename the tag.'))
+				console.error(error)
+				this.renameTagLabel = false
+				this.renameTagInput = false
+				this.showSaving = true
+			}
+		},
 
 	},
 }
@@ -184,7 +232,6 @@ export default {
 .tag-actions {
 	background-color: transparent;
 	border: none;
-	float: right;
 	&:hover,
 	&:focus {
 		opacity: .7;
