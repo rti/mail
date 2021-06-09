@@ -47,12 +47,12 @@
 					<ActionButton v-if="renameTagLabel"
 						icon="icon-rename"
 						@click="openEditTag">
-						{{ t('mail','Edit tag') }}
+						{{ t('mail','Rename tag') }}
 					</ActionButton>
 					<ActionInput v-if="renameTagInput"
-								 icon="icon-tag"
-								 :value="tag.displayName"
-								 @submit="updateTag" />
+						icon="icon-tag"
+						:value="tag.displayName"
+						@submit="renameTag" />
 					<ActionText
 						v-if="showSaving"
 						icon="icon-loading-small">
@@ -86,7 +86,7 @@ import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionText from '@nextcloud/vue/dist/Components/ActionText'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import {showError, showInfo} from '@nextcloud/dialogs'
+import { showError, showInfo } from '@nextcloud/dialogs'
 
 function randomColor() {
 	let randomHexColor = ((1 << 24) * Math.random() | 0).toString(16)
@@ -183,12 +183,12 @@ export default {
 			this.showSaving = false
 
 		},
-		async updateTag(event) {
+		async renameTag(event) {
 			this.renameTagInput = false
 			this.showSaving = false
 			const newName = event.target.querySelector('input[type=text]').value
 			try {
-				await this.$store.dispatch('updateTag',{
+				await this.$store.dispatch('updateTag', {
 					tag: this.tag,
 					newName,
 				})

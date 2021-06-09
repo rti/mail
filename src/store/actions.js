@@ -799,10 +799,10 @@ export default {
 			tagId: tag.id,
 		})
 	},
-/*	async updateTag ({ commit }, { id, displayname, color }) {
-		const newTag = await updateEnvelopeTag(id, displayname, color)
-		console.debug(`tag renamed`)
-		commit('updateTag', {displayname, color, newTag})*/
+	async updateTag({ commit }, { id, displayName, color }) {
+		const newTag = await updateEnvelopeTag(id, displayName, color)
+		console.debug('tag renamed')
+		commit('updateTag', { displayName, color, newTag })
 
 	},
 }
