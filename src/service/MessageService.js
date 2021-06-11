@@ -134,12 +134,9 @@ export async function setEnvelopeTag(id, imapLabel) {
 export async function updateEnvelopeTag(id, displayName, color) {
 	const url = generateUrl('/apps/mail/api/tags/{id}', {
 		id,
-		displayName,
-		color,
 	})
 
-	const { data } = await axios.put(url)
-	return data
+	await axios.put(url, { displayName, color})
 }
 
 export async function removeEnvelopeTag(id, imapLabel) {

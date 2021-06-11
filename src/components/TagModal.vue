@@ -52,7 +52,7 @@
 					<ActionInput v-if="renameTagInput"
 						icon="icon-tag"
 						:value="tag.displayName"
-						@submit="renameTag" />
+						@submit="renameTag(tag, $event)" />
 					<ActionText
 						v-if="showSaving"
 						icon="icon-loading-small">
@@ -183,15 +183,16 @@ export default {
 			this.showSaving = false
 
 		},
-		async renameTag(event) {
+		async renameTag(tag, event) {
 			this.renameTagInput = false
 			this.showSaving = false
-			const newName = event.target.querySelector('input[type=text]').value
+			const displayName = event.target.querySelector('input[type=text]').value
+
 			try {
 				await this.$store.dispatch('updateTag', {
-					tag: this.tag,
-					newName,
-					color: randomColor(newName)
+					tag,
+					displayName,
+					color: tag.color,
 				})
 				this.renameTagLabel = true
 				this.renameTagInput = false
