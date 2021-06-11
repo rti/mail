@@ -801,9 +801,9 @@ export default {
 		})
 	},
 	async updateTag({ commit }, { id, displayName, color }) {
-		const newTag = await updateEnvelopeTag(id, displayName, color)
+		const newName = await updateEnvelopeTag(id, displayName, color)
 		console.debug('tag renamed')
-		commit('updateTag', { displayName, color, newTag })
+		commit('updateTag', { displayName, color, newName })
 
 	},
 	async deleteThread({ getters, commit }, { envelope }) {

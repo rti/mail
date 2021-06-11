@@ -191,6 +191,7 @@ export default {
 				await this.$store.dispatch('updateTag', {
 					tag: this.tag,
 					newName,
+					color: randomColor(newName)
 				})
 				this.renameTagLabel = true
 				this.renameTagInput = false
