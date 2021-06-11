@@ -79,7 +79,8 @@ import SyncIncompleteError from '../errors/SyncIncompleteError'
 import MailboxLockedError from '../errors/MailboxLockedError'
 import { wait } from '../util/wait'
 import { updateAccount as updateSieveAccount } from '../service/SieveService'
-import { UNIFIED_INBOX_ID, PAGE_SIZE } from './constants'
+import { PAGE_SIZE, UNIFIED_INBOX_ID } from './constants'
+import * as ThreadService from '../service/ThreadService'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -804,5 +805,29 @@ export default {
 		console.debug('tag renamed')
 		commit('updateTag', { displayName, color, newTag })
 
+	},
+	async deleteThread({ getters, commit }, { envelope }) {
+		commit('removeEnvelope', { id: envelope.databaseId })
+
+		try {
+			await ThreadService.deleteThread(envelope.databaseId)
+			console.debug('thread removed')
+		} catch (e) {
+			commit('addEnvelope', envelope)
+			console.error('could not delete thread', e)
+			throw e
+		}
+	},
+	async moveThread({ getters, commit }, { envelope, destMailboxId }) {
+		commit('removeEnvelope', { id: envelope.databaseId })
+
+		try {
+			await ThreadService.moveThread(envelope.databaseId, destMailboxId)
+			console.debug('thread removed')
+		} catch (e) {
+			commit('addEnvelope', envelope)
+			console.error('could not move thread', e)
+			throw e
+		}
 	},
 }
