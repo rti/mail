@@ -246,6 +246,9 @@ export default {
 	background-color: transparent;
 	padding-left: 10px;
 	padding-right: 10px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 94px;
 }
 .app-navigation-entry-bullet-wrapper {
 	width: 44px;
@@ -273,13 +276,14 @@ export default {
 	display: inline-block;
 	margin-left: 10px;
 }
-.action {
-	list-style: none;
-}
 ::v-deep .action-input {
 	margin-left: -31px;
 }
 ::v-deep .icon-tag {
 	background-image: none;
+}
+.action-item {
+	top: 5px;
+	right: 6px;
 }
 </style>
