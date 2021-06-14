@@ -33,17 +33,7 @@
 					}">
 					{{ tag.displayName }}
 				</button>
-				<button v-if="!isSet(tag.imapLabel)"
-					class="tag-actions"
-					@click="addTag(tag.imapLabel)">
-					{{ t('mail','Add') }}
-				</button>
-				<button v-else
-					class="tag-actions"
-					@click="removeTag(tag.imapLabel)">
-					{{ t('mail','Remove') }}
-				</button>
-				<Actions :force-menu="true">
+				<Actions v-if="!tag.isDefaultTag" :force-menu="true">
 					<ActionButton v-if="renameTagLabel"
 						icon="icon-rename"
 						@click="openEditTag">
@@ -59,6 +49,16 @@
 						{{ t('mail', 'Saving new tag name …') }}
 					</ActionText>
 				</Actions>
+				<button v-if="!isSet(tag.imapLabel)"
+					class="tag-actions"
+					@click="addTag(tag.imapLabel)">
+					{{ t('mail','Add') }}
+				</button>
+				<button v-else
+					class="tag-actions"
+					@click="removeTag(tag.imapLabel)">
+					{{ t('mail','Remove') }}
+				</button>
 			</div>
 			<h2 class="tag-title">
 				{{ t('mail', 'Add tag') }}
@@ -234,9 +234,11 @@ export default {
 .tag-actions {
 	background-color: transparent;
 	border: none;
+	float: right;
 	&:hover,
 	&:focus {
 		opacity: .7;
+		background-color: var(--color-placeholder-dark);
 	}
 }
 .tag-group__label {
@@ -283,7 +285,7 @@ export default {
 	background-image: none;
 }
 .action-item {
-	top: 5px;
-	right: 6px;
+	right: 8px;
+	float: right;
 }
 </style>

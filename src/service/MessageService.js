@@ -136,7 +136,7 @@ export async function updateEnvelopeTag(id, displayName, color) {
 		id,
 	})
 
-	await axios.put(url, { displayName, color})
+	await axios.put(url, { displayName, color })
 }
 
 export async function removeEnvelopeTag(id, imapLabel) {
