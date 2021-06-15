@@ -3,6 +3,8 @@
 		<div class="modal-content">
 			<h2>{{ t('mail', 'Create event') }}</h2>
 			<input v-model="eventTitle" type="text">
+			<DatetimePicker></DatetimePicker>
+			<DatetimePicker></DatetimePicker>
 			<button class="primary">
 				{{ t('mail', 'Create') }}
 			</button>
@@ -11,6 +13,7 @@
 </template>
 
 <script>
+import DatetimePicker from '@nextcloud/vue/dist/Components/DatetimePicker'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 
 import logger from '../logger'
@@ -18,6 +21,7 @@ import logger from '../logger'
 export default {
 	name: 'EventModal',
 	components: {
+		DatetimePicker,
 		Modal,
 	},
 	props: {
