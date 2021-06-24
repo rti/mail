@@ -237,8 +237,7 @@ export default {
 	float: right;
 	&:hover,
 	&:focus {
-		opacity: .7;
-		background-color: var(--color-placeholder-dark);
+		background-color: var(--color-border-dark);
 	}
 }
 .tag-group__label {
