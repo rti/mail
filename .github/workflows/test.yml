@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         php-versions: [7.3, 7.4]
-        nextcloud-versions: ['stable20', 'stable21', 'master']
+        nextcloud-versions: ['stable20', 'stable21', 'stable22', 'master']
         include:
             - php: 8.0
               nextcloud-version: master
@@ -150,7 +150,7 @@ jobs:
       steps:
           - uses: actions/checkout@master
           - name: Set up Node
-            uses: actions/setup-node@v2.1.5
+            uses: actions/setup-node@v2.2.0
             with:
                 node-version: 12.x
           - name: npm install

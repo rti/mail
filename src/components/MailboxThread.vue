@@ -1,6 +1,6 @@
 <template>
-	<AppContent>
-		<div id="app-content-wrapper">
+	<AppContent pane-config-key="mail" :show-details="isThreadShown" @update:showDetails="hideMessage">
+		<template slot="list">
 			<AppContentList
 				v-infinite-scroll="onScroll"
 				v-shortkey.once="shortkeys"
@@ -58,10 +58,10 @@
 						:bus="bus" />
 				</template>
 			</AppContentList>
-			<NewMessageDetail v-if="newMessage" />
-			<Thread v-else-if="showThread" @delete="deleteMessage" />
-			<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
-		</div>
+		</template>
+		<NewMessageDetail v-if="newMessage" />
+		<Thread v-else-if="showThread" @delete="deleteMessage" />
+		<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
 	</AppContent>
 </template>
 
@@ -69,11 +69,11 @@
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppContentList from '@nextcloud/vue/dist/Components/AppContentList'
 import Popover from '@nextcloud/vue/dist/Components/Popover'
-import infiniteScroll from 'vue-infinite-scroll'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import SectionTitle from './SectionTitle'
 import Vue from 'vue'
 
+import infiniteScroll from '../directives/infinite-scroll'
 import logger from '../logger'
 import Mailbox from './Mailbox'
 import NewMessageDetail from './NewMessageDetail'
@@ -153,6 +153,9 @@ export default {
 				|| this.$route.params.threadId === 'asNew'
 			)
 		},
+		isThreadShown() {
+			return !!this.$route.params.threadId
+		},
 	},
 	methods: {
 		deleteMessage(id) {
@@ -171,6 +174,15 @@ export default {
 				return str
 			}
 			return this.searchQuery + ' ' + str
+		},
+		hideMessage() {
+			this.$router.replace({
+				name: 'mailbox',
+				params: {
+					mailboxId: this.$route.params.mailboxId,
+					filter: this.$route.params?.filter,
+				},
+			})
 		},
 	},
 }
