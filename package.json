@@ -43,6 +43,7 @@
     "@nextcloud/vue-dashboard": "^2",
     "@riophae/vue-treeselect": "^0.4.0",
     "@vue/babel-preset-app": "^4.5.13",
+    "calendar-js": "github:nextcloud/calendar-js",
     "color-convert": "^2.0.1",
     "core-js": "^3.15.2",
     "debounce-promise": "^3.1.2",
