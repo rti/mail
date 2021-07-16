@@ -104,8 +104,8 @@
 				{{ t('mail', 'Move thread') }}
 			</ActionButton>
 			<ActionButton icon="icon-calendar-dark"
-						  :close-after-click="true"
-						  @click.prevent="showEventModal = true">
+				:close-after-click="true"
+				@click.prevent="showEventModal = true">
 				{{ t('mail', 'Create event') }}
 			</ActionButton>
 			<ActionRouter icon="icon-add"
@@ -148,8 +148,8 @@
 				@move="onMove"
 				@close="onCloseMoveModal" />
 			<EventModal v-if="showEventModal"
-					   :envelope="data"
-					   @close="showEventModal = false" />
+				:envelope="data"
+				@close="showEventModal = false" />
 			<TagModal
 				v-if="showTagModal"
 				:account="account"
@@ -175,7 +175,7 @@ import logger from '../logger'
 import { matchError } from '../errors/match'
 import MoveModal from './MoveModal'
 import TagModal from './TagModal'
-import EventModal from "./EventModal";
+import EventModal from './EventModal'
 
 export default {
 	name: 'Envelope',

@@ -48,8 +48,6 @@ export default {
 }
 </script>
 
-</script>
-
 <style lang="scss">
 .modal-container {
 	width: calc(100vw - 120px) !important;
