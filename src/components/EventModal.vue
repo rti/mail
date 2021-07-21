@@ -2,15 +2,19 @@
 	<Modal @close="onClose">
 		<div class="modal-content">
 			<h2>{{ t('mail', 'Create event') }}</h2>
+			<div class="eventTitle">
+				<input v-model="eventTitle" type="text">
+			</div>
 			<Multiselect
 				v-model="selectedCalendar"
 				label="displayname"
 				track-by="url"
 				:allow-empty="false"
 				:options="calendars" />
-			<input v-model="eventTitle" type="text">
+			<br>
 			<DatetimePicker type="datetime" :show-timezone-select="true" :timezone-id="startTimezoneId" />
 			<DatetimePicker type="datetime" :show-timezone-select="true" :timezone-id="endTimezoneId" />
+			<br>
 			<button class="primary" @click="onSave">
 				{{ t('mail', 'Create') }}
 			</button>
@@ -110,11 +114,20 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.modal-container {
+<style lang="scss" scoped>
+::v-deep .modal-wrapper .modal-container {
 	width: calc(100vw - 120px) !important;
 	height: calc(100vh - 120px) !important;
 	max-width: 600px !important;
 	max-height: 500px !important;
+}
+.modal-content {
+	padding: 30px 40px 20px !important;
+}
+input {
+	width: 100% !important;
+}
+::v-deep .multiselect.multiselect--single {
+	width: 100% !important;
 }
 </style>
