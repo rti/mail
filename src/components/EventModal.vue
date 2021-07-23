@@ -9,6 +9,19 @@
 			<DatetimePicker type="datetime" :show-timezone-select="true" :timezone-id="startTimezoneId" />
 			<DatetimePicker type="datetime" :show-timezone-select="true" :timezone-id="endTimezoneId" />
 			</div>
+			<div v-if="!isReadOnly" class="all-day">
+				<input
+					id="allDay"
+					:checked="isAllDay"
+					type="checkbox"
+					class="checkbox"
+					:disabled="!canModifyAllDay"
+					@change="toggleAllDay">
+				<label
+					for="allDay">
+					{{ t('mail', 'All day') }}
+				</label>
+			</div>
 			<Multiselect
 				v-model="selectedCalendar"
 				label="displayname"
@@ -59,6 +72,18 @@ export default {
 			type: Object,
 			required: true,
 		},
+		isAllDay: {
+			type: Boolean,
+			required: true,
+		},
+		canModifyAllDay: {
+			type: Boolean,
+			required: true,
+		},
+		isReadOnly: {
+			type: Boolean,
+			required: true,
+		},
 	},
 	data() {
 		// Try to determine the current timezone, and fall back to UTC otherwise
@@ -87,6 +112,12 @@ export default {
 		}
 	},
 	methods: {
+		toggleAllDay() {
+			if (!this.canModifyAllDay) {
+				return
+			}
+			this.$emit('toggleAllDay')
+		},
 		onClose() {
 			this.$emit('close')
 		},
@@ -132,22 +163,35 @@ export default {
 ::v-deep .modal-wrapper .modal-container {
 	width: calc(100vw - 120px) !important;
 	height: calc(100vh - 120px) !important;
-	max-width: 600px !important;
+	max-width: 490px !important;
 	max-height: 500px !important;
 }
 .modal-content {
-	padding: 30px 40px 20px !important;
+	padding: 30px 30px 20px !important;
 }
 input {
-	width: 100% !important;
+	width: 424px !important;
 }
 ::v-deep input[type='text'].multiselect__input {
 	padding: 0 !important;
 }
 ::v-deep .multiselect__single {
 	margin-left: -18px;
+	width: 100px;
 }
 ::v-deep .multiselect__tags {
 	border: none !important;
+}
+.all-day {
+	margin-left: -1px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.eventTitle {
+	margin-bottom: 5px;
+}
+.primary {
+	height: 44px !important;
+	float: right;
 }
 </style>
