@@ -24,6 +24,7 @@ import Axios from '@nextcloud/axios'
 import Logger from '../logger'
 import { generateRemoteUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
+import {uidToHexColor} from "../../../calendar/src/utils/color";
 
 const canWrite = (properties) => {
 	let acls = properties?.acl?.ace
@@ -46,6 +47,7 @@ const canWrite = (properties) => {
 }
 
 const getCalendarData = (calendar) => {
+	console.log(calendar.props)
 	return {
 		displayname: calendar.props.displayname,
 		order: calendar.props['calendar-order'],
@@ -54,6 +56,8 @@ const getCalendarData = (calendar) => {
 		},
 		writable: canWrite(calendar.props),
 		url: generateRemoteUrl(`dav/calendars/${getCurrentUser().uid}${calendar.filename}/`),
+		color: calendar.props['calendar-color'] ?? uidToHexColor(calendar.props.displayname ?? ''),
+
 	}
 }
 
@@ -70,6 +74,7 @@ export const getUserCalendars = async() => {
     <c:calendar-description />
     <c:calendar-timezone />
     <aapl:calendar-order />
+    <aapl:calendar-color />
     <c:supported-calendar-component-set />
     <oc:calendar-enabled />
     <d:acl />

@@ -5,15 +5,27 @@
 			<div class="eventTitle">
 				<input v-model="eventTitle" type="text">
 			</div>
+			<div class="dateTimePicker">
+			<DatetimePicker type="datetime" :show-timezone-select="true" :timezone-id="startTimezoneId" />
+			<DatetimePicker type="datetime" :show-timezone-select="true" :timezone-id="endTimezoneId" />
+			</div>
 			<Multiselect
 				v-model="selectedCalendar"
 				label="displayname"
 				track-by="url"
 				:allow-empty="false"
-				:options="calendars" />
-			<br>
-			<DatetimePicker type="datetime" :show-timezone-select="true" :timezone-id="startTimezoneId" />
-			<DatetimePicker type="datetime" :show-timezone-select="true" :timezone-id="endTimezoneId" />
+				:options="calendars">
+				<template #option="{option}">
+					<CalendarPickerOption
+						v-bind="option">
+					</CalendarPickerOption>
+				</template>
+				<template #singleLabel="{option}">
+					<CalendarPickerOption
+						v-bind="option">
+					</CalendarPickerOption>
+				</template>
+			</Multiselect>
 			<br>
 			<button class="primary" @click="onSave">
 				{{ t('mail', 'Create') }}
@@ -32,10 +44,12 @@ import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 
 import { getUserCalendars } from '../service/DAVService'
 import logger from '../logger'
+import CalendarPickerOption from "./CalendarPickerOption";
 
 export default {
 	name: 'EventModal',
 	components: {
+		CalendarPickerOption,
 		DatetimePicker,
 		Modal,
 		Multiselect,
@@ -127,7 +141,13 @@ export default {
 input {
 	width: 100% !important;
 }
-::v-deep .multiselect.multiselect--single {
-	width: 100% !important;
+::v-deep input[type='text'].multiselect__input {
+	padding: 0 !important;
+}
+::v-deep .multiselect__single {
+	margin-left: -18px;
+}
+::v-deep .multiselect__tags {
+	border: none !important;
 }
 </style>
