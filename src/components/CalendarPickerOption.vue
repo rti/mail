@@ -8,6 +8,8 @@
 			class="calendar-picker-option__label">
 			{{ displayname }}
 		</span>
+    <span :class="displayIcon ? 'icon-caret-dark' : ''">
+    </span>
 	</div>
 </template>
 
@@ -23,6 +25,10 @@ export default {
 			type: String,
 			required: true,
 		},
+    displayIcon: {
+		  type: Boolean,
+      default: false,
+    }
 	},
 }
 </script>
@@ -47,6 +53,7 @@ export default {
 		overflow: hidden;
 		text-overflow: ellipsis;
 		flex-grow: 1;
+    max-width: 80px;
 	}
 }
 

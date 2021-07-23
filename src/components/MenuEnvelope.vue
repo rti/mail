@@ -122,8 +122,8 @@
 			@move="onMove"
 			@close="onCloseMoveModal" />
 		<EventModal v-if="showEventModal"
-					:envelope="[envelope]"
-					@close="showEventModal = false" />
+			:envelope="[envelope]"
+			@close="showEventModal = false" />
 		<TagModal
 			v-if="showTagModal"
 			:account="account"

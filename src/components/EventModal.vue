@@ -6,8 +6,8 @@
 				<input v-model="eventTitle" type="text">
 			</div>
 			<div class="dateTimePicker">
-			<DatetimePicker type="datetime" :show-timezone-select="true" :timezone-id="startTimezoneId" />
-			<DatetimePicker type="datetime" :show-timezone-select="true" :timezone-id="endTimezoneId" />
+				<DatetimePicker type="datetime" :show-timezone-select="true" :timezone-id="startTimezoneId" />
+				<DatetimePicker type="datetime" :show-timezone-select="true" :timezone-id="endTimezoneId" />
 			</div>
 			<div v-if="!isReadOnly" class="all-day">
 				<input
@@ -30,13 +30,12 @@
 				:options="calendars">
 				<template #option="{option}">
 					<CalendarPickerOption
-						v-bind="option">
-					</CalendarPickerOption>
+						v-bind="option" />
 				</template>
 				<template #singleLabel="{option}">
 					<CalendarPickerOption
-						v-bind="option">
-					</CalendarPickerOption>
+						:display-icon="true"
+						v-bind="option" />
 				</template>
 			</Multiselect>
 			<br>
@@ -57,7 +56,7 @@ import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 
 import { getUserCalendars } from '../service/DAVService'
 import logger from '../logger'
-import CalendarPickerOption from "./CalendarPickerOption";
+import CalendarPickerOption from './CalendarPickerOption'
 
 export default {
 	name: 'EventModal',

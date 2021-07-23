@@ -34,11 +34,8 @@ export function uidToHexColor(uid) {
 	return '#' + convert.rgb.hex(color.r, color.g, color.b)
 }
 
-
- //copied from calendar
- //TODO: have it separately in a file
-
-
+// copied from calendar
+// TODO: have it separately in a file
 
 /**
  * This is copied from nextcloud-vue for now, until it is exposed upstream.
