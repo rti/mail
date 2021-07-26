@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2021 Anna Larch <anna@nextcloud.com>
  *
- * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Anna Larch <anna@nextcloud.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -96,7 +96,7 @@ class HamReportListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			123,
-			'notjunk',
+			'$notjunk',
 			false
 		);
 
@@ -117,7 +117,7 @@ class HamReportListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			123,
-			'notjunk',
+			'$notjunk',
 			true
 		);
 
@@ -142,22 +142,18 @@ class HamReportListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			123,
-			'notjunk',
+			'$notjunk',
 			true
 		);
 
 		$this->serviceMock->getParameter('antiSpamService')
-			->expects($this->exactly(2))
+			->expects($this->once())
 			->method('getHamEmail')
 			->willReturn('SpammitySpam@WonderfulSpam.egg');
 		$this->serviceMock->getParameter('antiSpamService')
 			->expects($this->once())
-			->method('getHamSubject')
-			->willReturn('Learn as Not Junk');
-		$this->serviceMock->getParameter('antiSpamService')
-			->expects($this->once())
 			->method('sendReportEmail')
-			->with($account, $mailbox, 123, 'SpammitySpam@WonderfulSpam.egg', 'Learn as Not Junk')
+			->with($event, 123)
 			->willThrowException(new ServiceException());
 		$this->serviceMock->getParameter('logger')
 			->expects($this->once())
@@ -173,22 +169,18 @@ class HamReportListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			123,
-			'notjunk',
+			'$notjunk',
 			true
 		);
 
 		$this->serviceMock->getParameter('antiSpamService')
-			->expects($this->exactly(2))
+			->expects($this->once())
 			->method('getHamEmail')
 			->willReturn('SpammitySpam@WonderfulSpam.egg');
 		$this->serviceMock->getParameter('antiSpamService')
 			->expects($this->once())
-			->method('getHamSubject')
-			->willReturn('Learn as Not Junk');
-		$this->serviceMock->getParameter('antiSpamService')
-			->expects($this->once())
 			->method('sendReportEmail')
-			->with($account, $mailbox, 123, 'SpammitySpam@WonderfulSpam.egg', 'Learn as Not Junk');
+			->with($event, 123);
 		$this->serviceMock->getParameter('logger')
 			->expects($this->never())
 			->method('error');

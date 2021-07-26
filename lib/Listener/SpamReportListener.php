@@ -47,7 +47,7 @@ class SpamReportListener implements IEventListener {
 	}
 
 	public function handle(Event $event): void {
-		if (!$event instanceof MessageFlaggedEvent || $event->getFlag() !== 'junk') {
+		if (!$event instanceof MessageFlaggedEvent || $event->getFlag() !== \Horde_Imap_Client::FLAG_JUNK) {
 			return;
 		}
 
@@ -60,9 +60,9 @@ class SpamReportListener implements IEventListener {
 			return;
 		}
 
-		//Send message to reporting service
+		// Send message to reporting service
 		try {
-			$this->antiSpamService->sendReportEmail($event->getAccount(), $event->getMailbox(), $event->getUid(), $this->antiSpamService->getSpamEmail(), $this->antiSpamService->getSpamSubject());
+			$this->antiSpamService->sendReportEmail($event, $event->getUid());
 		} catch (ServiceException $e) {
 			$this->logger->error("Could not send spam report: " . $e->getMessage(), ['exception' => $e]);
 		}

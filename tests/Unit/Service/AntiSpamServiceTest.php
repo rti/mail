@@ -27,6 +27,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Model\NewMessageData;
@@ -63,25 +64,40 @@ class AntiSpamServiceTest extends TestCase {
 	}
 
 	public function testSendReportEmailNoMessageFound(): void {
-		$account = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
+		$event = $this->createConfiguredMock(MessageFlaggedEvent::class, [
+			'getAccount' => $this->createMock(Account::class),
+			'getMailbox' => $this->createMock(Mailbox::class),
+			'getFlag' => '$junk'
+		]);
 
+		$this->config->expects($this->once())
+			->method('getAppValue')
+			->with('mail', AntiSpamService::NAME . '_spam')
+			->willReturn('test@test.com');
 		$this->messageMapper->expects($this->once())
 			->method('getIdForUid')
-			->with($mailbox, 123)
+			->with($event->getMailbox(), 123)
 			->willReturn(null);
 		$this->expectException(ServiceException::class);
 		$this->transmission->expects($this->never())
 			->method('sendMessage');
 
-		$this->service->sendReportEmail($account, $mailbox, 123, 'test@test.com', 'Learn as Junk');
+		$this->service->sendReportEmail($event, 123);
 	}
 
-	public function testsendReportEmailTransmissionError(): void {
-		$account = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
+	public function testSendReportEmailTransmissionError(): void {
+		$event = $this->createConfiguredMock(MessageFlaggedEvent::class, [
+			'getAccount' => $this->createMock(Account::class),
+			'getMailbox' => $this->createMock(Mailbox::class),
+			'getFlag' => '$junk'
+		]);
+
+		$this->config->expects($this->once())
+			->method('getAppValue')
+			->with('mail', AntiSpamService::NAME . '_spam')
+			->willReturn('test@test.com');
 		$messageData = NewMessageData::fromRequest(
-			$account,
+			$event->getAccount(),
 			'test@test.com',
 			null,
 			null,
@@ -92,7 +108,7 @@ class AntiSpamServiceTest extends TestCase {
 
 		$this->messageMapper->expects($this->once())
 			->method('getIdForUid')
-			->with($mailbox, 123)
+			->with($event->getMailbox(), 123)
 			->willReturn(123);
 		$this->transmission->expects($this->once())
 			->method('sendMessage')
@@ -100,14 +116,23 @@ class AntiSpamServiceTest extends TestCase {
 			->willThrowException(new ServiceException());
 		$this->expectException(ServiceException::class);
 
-		$this->service->sendReportEmail($account, $mailbox, 123, 'test@test.com', 'Learn as Junk');
+		$this->service->sendReportEmail($event, 123);
+
 	}
 
 	public function testSendReportEmail(): void {
-		$account = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
+		$event = $this->createConfiguredMock(MessageFlaggedEvent::class, [
+			'getAccount' => $this->createMock(Account::class),
+			'getMailbox' => $this->createMock(Mailbox::class),
+			'getFlag' => '$junk'
+		]);
+
+		$this->config->expects($this->once())
+			->method('getAppValue')
+			->with('mail', AntiSpamService::NAME . '_spam')
+			->willReturn('test@test.com');
 		$messageData = NewMessageData::fromRequest(
-			$account,
+			$event->getAccount(),
 			'test@test.com',
 			null,
 			null,
@@ -118,20 +143,28 @@ class AntiSpamServiceTest extends TestCase {
 
 		$this->messageMapper->expects($this->once())
 			->method('getIdForUid')
-			->with($mailbox, 123)
+			->with($event->getMailbox(), 123)
 			->willReturn(123);
 		$this->transmission->expects($this->once())
 			->method('sendMessage')
 			->with($messageData);
 
-		$this->service->sendReportEmail($account, $mailbox, 123, 'test@test.com', 'Learn as Junk');
+		$this->service->sendReportEmail($event, 123);
 	}
 
 	public function testSendReportEmailForHam(): void {
-		$account = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Mailbox::class);
+		$event = $this->createConfiguredMock(MessageFlaggedEvent::class, [
+			'getAccount' => $this->createMock(Account::class),
+			'getMailbox' => $this->createMock(Mailbox::class),
+			'getFlag' => '$notjunk'
+		]);
+
+		$this->config->expects($this->once())
+			->method('getAppValue')
+			->with('mail', AntiSpamService::NAME . '_ham')
+			->willReturn('test@test.com');
 		$messageData = NewMessageData::fromRequest(
-			$account,
+			$event->getAccount(),
 			'test@test.com',
 			null,
 			null,
@@ -142,12 +175,12 @@ class AntiSpamServiceTest extends TestCase {
 
 		$this->messageMapper->expects($this->once())
 			->method('getIdForUid')
-			->with($mailbox, 123)
+			->with($event->getMailbox(), 123)
 			->willReturn(123);
 		$this->transmission->expects($this->once())
 			->method('sendMessage')
 			->with($messageData);
 
-		$this->service->sendReportEmail($account, $mailbox, 123, 'test@test.com', 'Learn as Not Junk');
+		$this->service->sendReportEmail($event, 123);
 	}
 }

@@ -28,6 +28,7 @@ namespace OCA\Mail\Service;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Db\Mailbox;
@@ -55,75 +56,51 @@ class AntiSpamService {
 		$this->transmission = $transmission;
 	}
 
-	/**
-	 * @codeCoverageIgnore
-	 */
 	public function getSpamEmail(): string {
 		return $this->config->getAppValue('mail', self::NAME . '_spam');
 	}
 
-	/**
-	 * @codeCoverageIgnore
-	 */
 	public function getHamEmail(): string {
 		return $this->config->getAppValue('mail', self::NAME. '_ham');
 	}
 
-	/**
-	 * @codeCoverageIgnore
-	 */
 	public function getSpamSubject(): string {
 		return 'Learn as Junk';
 	}
 
-	/**
-	 * @codeCoverageIgnore
-	 */
 	public function getHamSubject(): string {
 		return 'Learn as Not Junk';
 	}
 
-	/**
-	 * @codeCoverageIgnore
-	 */
 	public function setSpamEmail(string $email): void {
 		$this->config->setAppValue('mail', self::NAME . '_spam', $email);
 	}
 
-	/**
-	 * @codeCoverageIgnore
-	 */
 	public function setHamEmail(string $email): void {
 		$this->config->setAppValue('mail', self::NAME. '_ham', $email);
 	}
 
-	/**
-	 * @codeCoverageIgnore
-	 */
 	public function deleteConfig(): void {
 		$this->config->deleteAppValue('mail', self::NAME . '_spam');
 		$this->config->deleteAppValue('mail', self::NAME . '_ham');
 	}
 
 	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
+	 * @param MessageFlaggedEvent $event
 	 * @param int $uid
 	 * @throws ServiceException
 	 */
-	public function sendReportEmail(Account $account, Mailbox $mailbox, int $uid, string $reportEmail, string $subject): void {
-		if(empty($reportEmail)) {
-			// quietly fail
-			return;
-		}
+	public function sendReportEmail(MessageFlaggedEvent $event, int $uid): void {
+		$reportEmail = ($event->getFlag() === \Horde_Imap_Client::FLAG_JUNK) ? $this->getSpamEmail() : $this->getHamEmail();
+		$subject = ($event->getFlag() === \Horde_Imap_Client::FLAG_JUNK) ? $this->getSpamSubject() : $this->getHamSubject();
 
-		$attachedMessageId = $this->messageMapper->getIdForUid($mailbox, $uid);
+		$attachedMessageId = $this->messageMapper->getIdForUid($event->getMailbox(), $uid);
 		if ($attachedMessageId === null) {
 			throw new ServiceException('Could not find reported message');
 		}
 
 		$messageData = NewMessageData::fromRequest(
-			$account,
+			$event->getAccount(),
 			$reportEmail,
 			null,
 			null,
