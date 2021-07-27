@@ -117,7 +117,6 @@ class AntiSpamServiceTest extends TestCase {
 		$this->expectException(ServiceException::class);
 
 		$this->service->sendReportEmail($event, 123);
-
 	}
 
 	public function testSendReportEmail(): void {
