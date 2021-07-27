@@ -26,7 +26,7 @@
 			{{ t('mail', 'Add the email address of your anti spam report service here.') }}
 		</p>
 		<p>
-			{{ t('mail', 'When using this setting, a report email will be sent to the SPAM report server when a user clicks "Mark as spam"') }}
+			{{ t('mail', 'When using this setting, a report email will be sent to the SPAM report server when a user clicks "Mark as spam".') }}
 			{{ t('mail', 'The original message will be attached as a "message/rfc822" attachment.') }}
 		</p>
 		<div class="form-preview-row">
