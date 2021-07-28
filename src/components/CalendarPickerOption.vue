@@ -53,7 +53,7 @@ export default {
 		overflow: hidden;
 		text-overflow: ellipsis;
 		flex-grow: 1;
-    max-width: 80px;
+		max-width: 80px;
 	}
 }
 

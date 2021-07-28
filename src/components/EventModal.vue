@@ -169,7 +169,7 @@ export default {
 	padding: 30px 30px 20px !important;
 }
 input {
-	width: 424px !important;
+	width: 100%;
 }
 ::v-deep input[type='text'].multiselect__input {
 	padding: 0 !important;
@@ -192,5 +192,8 @@ input {
 .primary {
 	height: 44px !important;
 	float: right;
+}
+::v-deep .mx-datepicker {
+	width: 213px;
 }
 </style>
