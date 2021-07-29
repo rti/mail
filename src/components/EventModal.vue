@@ -47,9 +47,9 @@
 </template>
 
 <script>
-import { createEvent, getTimezoneManager } from 'calendar-js'
+import { createEvent, getTimezoneManager } from '@nextcloud/calendar-js'
 import DatetimePicker from '@nextcloud/vue/dist/Components/DatetimePicker'
-import DateTimeValue from 'calendar-js/src/values/dateTimeValue'
+import DateTimeValue from '@nextcloud/calendar-js/src/values/dateTimeValue'
 import jstz from 'jstz'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
@@ -132,9 +132,9 @@ export default {
 					endTimezone: this.endTimezoneId,
 				})
 
-				// TODO: the tz manager is not initialized, it won't find any timezones
-				//       https://github.com/nextcloud/calendar-js/issues/273
 				const timezoneManager = getTimezoneManager()
+				// TODO: only do this once
+				timezoneManager.registerDefaultTimezones()
 				const startTimezone = timezoneManager.getTimezoneForId(this.startTimezoneId)
 				const startDateTime = DateTimeValue
 					.fromJSDate(this.startDate, true)
